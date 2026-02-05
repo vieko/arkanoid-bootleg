@@ -11,3 +11,10 @@ html, body {
   height: 100%;
   overflow: hidden;
 }
+
+/* Prevent browser scroll and zoom on touch devices during gameplay */
+@media (max-width: 768px) {
+  .game-container {
+    touch-action: none;
+  }
+}

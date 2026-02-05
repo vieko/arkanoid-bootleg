@@ -3,9 +3,11 @@
 interface WinScreenProps {
   score: number;
   onRestart: () => void;
+  isNewHighScore?: boolean;
+  totalLevels: number;
 }
 
-export default function WinScreen({ score, onRestart }: WinScreenProps) {
+export default function WinScreen({ score, onRestart, isNewHighScore, totalLevels }: WinScreenProps) {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-10">
       <div className="text-center">
@@ -16,7 +18,25 @@ export default function WinScreen({ score, onRestart }: WinScreenProps) {
             YOU WIN!
           </h2>
           <div className="w-48 h-1 bg-gradient-to-r from-yellow-400 via-green-400 to-cyan-400 mx-auto mt-2" />
+          <div className="text-xl text-cyan-300 mt-4 font-semibold tracking-wide">
+            ALL {totalLevels} LEVELS COMPLETED!
+          </div>
         </div>
+
+        {/* New High Score Notification */}
+        {isNewHighScore && (
+          <div className="mb-6 animate-pulse">
+            <div
+              className="text-2xl font-bold bg-gradient-to-r from-pink-400 via-yellow-400 to-pink-400 bg-clip-text text-transparent
+                         drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]"
+              style={{
+                textShadow: '0 0 20px rgba(236, 72, 153, 0.6), 0 0 40px rgba(234, 179, 8, 0.4)',
+              }}
+            >
+              NEW HIGH SCORE!
+            </div>
+          </div>
+        )}
 
         {/* Final Score */}
         <div className="mb-8">
@@ -24,7 +44,7 @@ export default function WinScreen({ score, onRestart }: WinScreenProps) {
           <div className="text-5xl font-mono font-bold text-white">
             {score.toString().padStart(6, '0')}
           </div>
-          <div className="text-green-400 text-sm mt-2">ALL BRICKS DESTROYED!</div>
+          <div className="text-green-400 text-sm mt-2">GAME COMPLETE - YOU ARE A CHAMPION!</div>
         </div>
 
         {/* Play Again Button */}

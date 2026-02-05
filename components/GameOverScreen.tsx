@@ -3,9 +3,10 @@
 interface GameOverScreenProps {
   score: number;
   onRestart: () => void;
+  isNewHighScore?: boolean;
 }
 
-export default function GameOverScreen({ score, onRestart }: GameOverScreenProps) {
+export default function GameOverScreen({ score, onRestart, isNewHighScore }: GameOverScreenProps) {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-10">
       <div className="text-center">
@@ -17,10 +18,35 @@ export default function GameOverScreen({ score, onRestart }: GameOverScreenProps
           <div className="w-32 h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent mx-auto" />
         </div>
 
+        {/* New High Score Notification */}
+        {isNewHighScore && (
+          <div className="mb-6 animate-pulse">
+            <div
+              className="text-3xl font-bold bg-gradient-to-r from-yellow-400 via-green-400 to-cyan-400 bg-clip-text text-transparent"
+              style={{
+                animation: 'glow 1.5s ease-in-out infinite alternate',
+                textShadow: '0 0 20px rgba(74, 222, 128, 0.5), 0 0 40px rgba(74, 222, 128, 0.3)',
+              }}
+            >
+              NEW HIGH SCORE!
+            </div>
+            <style jsx>{`
+              @keyframes glow {
+                from {
+                  filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.8));
+                }
+                to {
+                  filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.8));
+                }
+              }
+            `}</style>
+          </div>
+        )}
+
         {/* Final Score */}
         <div className="mb-8">
           <div className="text-gray-400 text-sm tracking-wider mb-2">FINAL SCORE</div>
-          <div className="text-5xl font-mono font-bold text-white">
+          <div className={`text-5xl font-mono font-bold ${isNewHighScore ? 'bg-gradient-to-r from-yellow-400 via-green-400 to-cyan-400 bg-clip-text text-transparent' : 'text-white'}`}>
             {score.toString().padStart(6, '0')}
           </div>
         </div>

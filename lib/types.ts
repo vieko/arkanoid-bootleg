@@ -1,4 +1,4 @@
-export type GameStatus = 'ready' | 'playing' | 'paused' | 'gameOver' | 'won';
+export type GameStatus = 'ready' | 'playing' | 'paused' | 'gameOver' | 'won' | 'levelComplete';
 
 export interface BrickData {
   id: string;
@@ -6,26 +6,44 @@ export interface BrickData {
   color: string;
   points: number;
   active: boolean;
+  destroyedAt?: number; // Timestamp when destruction animation started
 }
 
-export interface GameState {
-  status: 'ready' | 'playing' | 'paused' | 'gameOver' | 'won';
+/**
+ * Represents a single high score entry with the score value and timestamp.
+ */
+export interface HighScoreEntry {
   score: number;
-  lives: number;
-  ballVelocity: { x: number; y: number };
-  paddleX: number;
-  bricks: BrickData[];
+  date: string; // ISO date string
 }
 
-export type GameAction =
-  | { type: 'START_GAME' }
-  | { type: 'PAUSE_GAME' }
-  | { type: 'RESUME_GAME' }
-  | { type: 'GAME_OVER' }
-  | { type: 'WIN' }
-  | { type: 'LOSE_LIFE' }
-  | { type: 'ADD_SCORE'; points: number }
-  | { type: 'DESTROY_BRICK'; id: string }
-  | { type: 'RESET_GAME' }
-  | { type: 'SET_PADDLE_X'; x: number }
-  | { type: 'SET_BALL_VELOCITY'; velocity: { x: number; y: number } };
+/**
+ * Container for high score data including all-time best and recent scores.
+ */
+export interface HighScores {
+  allTime: number;
+  recent: HighScoreEntry[]; // Last 10 entries
+}
+
+/**
+ * All available power-up types in the game.
+ */
+export type PowerUpType = 'expand' | 'shrink' | 'slow' | 'fast' | 'multi' | 'laser' | 'life' | 'sticky';
+
+/**
+ * Represents a power-up item that can be collected by the player.
+ */
+export interface PowerUp {
+  id: string;
+  type: PowerUpType;
+  position: [number, number, number];
+  active: boolean;
+}
+
+/**
+ * Represents an active power-up effect with an expiration timestamp.
+ */
+export interface ActiveEffect {
+  type: PowerUpType;
+  expiresAt: number;  // timestamp
+}
