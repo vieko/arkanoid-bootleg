@@ -39,7 +39,7 @@ export const COLORS = {
   ball: '#ffff00',
   brickColors: ['#ff0055', '#ff6600', '#ffff00', '#00ff66', '#00ffff'],
   background: '#0a0a1a',
-  walls: '#ffffff',
+  walls: '#202042',
 };
 
 // Power-ups
