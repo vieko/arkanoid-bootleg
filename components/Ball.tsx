@@ -57,6 +57,15 @@ const Ball = forwardRef<BallRef, BallProps>(
     // Track previous game status to detect transitions (not continuous checks)
     const prevGameStatus = useRef<GameStatus>(gameStatus);
 
+    // Store initial position in a ref so it doesn't change on re-renders
+    // This prevents the ball from snapping back to paddle when paddleX prop changes
+    const defaultY = PADDLE_Y + PADDLE_HEIGHT / 2 + BALL_RADIUS + BALL_PADDLE_OFFSET;
+    const initialPosRef = useRef<[number, number, number]>([
+      initialPosition?.x ?? paddleX,
+      initialPosition?.y ?? defaultY,
+      0
+    ]);
+
     // Determine ball color based on active effects
     const ballColor = useMemo(() => {
       if (activeEffects.some(e => e.type === 'slow')) return '#44ff44'; // Green for slow
@@ -197,15 +206,10 @@ const Ball = forwardRef<BallRef, BallProps>(
       }
     });
 
-    // Calculate initial position
-    const defaultY = PADDLE_Y + PADDLE_HEIGHT / 2 + BALL_RADIUS + BALL_PADDLE_OFFSET;
-    const startX = initialPosition?.x ?? paddleX;
-    const startY = initialPosition?.y ?? defaultY;
-
     return (
       <mesh
         ref={meshRef}
-        position={[startX, startY, 0]}
+        position={initialPosRef.current}
       >
         <sphereGeometry args={[BALL_RADIUS, 32, 32]} />
         <meshStandardMaterial
