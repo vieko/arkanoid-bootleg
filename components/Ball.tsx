@@ -54,6 +54,8 @@ const Ball = forwardRef<BallRef, BallProps>(
     const isStuck = useRef(false);
     const stuckOffset = useRef(0);
     const isMainBall = ballId === 'main';
+    // Track previous game status to detect transitions (not continuous checks)
+    const prevGameStatus = useRef<GameStatus>(gameStatus);
 
     // Determine ball color based on active effects
     const ballColor = useMemo(() => {
@@ -104,8 +106,12 @@ const Ball = forwardRef<BallRef, BallProps>(
     useFrame(() => {
       if (!meshRef.current) return;
 
-      // Reset isLaunched when returning to ready state (only for main ball)
-      if (gameStatus === 'ready' && isLaunched.current && isMainBall) {
+      // Reset isLaunched only when TRANSITIONING to ready state (not continuously while in ready)
+      // This prevents the race condition where React state update hasn't propagated yet
+      const transitionedToReady = gameStatus === 'ready' && prevGameStatus.current !== 'ready';
+      prevGameStatus.current = gameStatus;
+
+      if (transitionedToReady && isMainBall) {
         isLaunched.current = false;
         isStuck.current = false;
         velocity.current = { x: 0, y: 0 };
